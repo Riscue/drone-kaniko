@@ -1,4 +1,4 @@
-FROM gcr.io/kaniko-project/executor:debug-v0.19.0
+FROM gcr.io/kaniko-project/executor:debug-v0.22.0
 
 LABEL maintainer="İbrahim Akyel <ibrahim@ibrahimakyel.com>" \
 	org.label-schema.name="Drone Kaniko" \
