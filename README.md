@@ -1,5 +1,7 @@
 # drone-kaniko
 
+[![Build Status](https://cloud.drone.io/api/badges/Riscue/drone-kaniko/status.svg)](https://cloud.drone.io/Riscue/drone-kaniko)
+
 A thin shim-wrapper around the official [Google Kaniko](https://cloud.google.com/blog/products/gcp/introducing-kaniko-build-container-images-in-kubernetes-and-google-container-builder-even-without-root-access) Docker image to make it behave like the [Drone Docker plugin](http://plugins.drone.io/drone-plugins/drone-docker/).
 
 This repo fork of existing [banzaicloud/drone-kaniko](https://github.com/banzaicloud/drone-kaniko) repository.
