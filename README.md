@@ -2,6 +2,8 @@
 
 A thin shim-wrapper around the official [Google Kaniko](https://cloud.google.com/blog/products/gcp/introducing-kaniko-build-container-images-in-kubernetes-and-google-container-builder-even-without-root-access) Docker image to make it behave like the [Drone Docker plugin](http://plugins.drone.io/drone-plugins/drone-docker/).
 
+This repo fork of existing [banzaicloud/drone-kaniko](https://github.com/banzaicloud/drone-kaniko) repository.
+
 Example .drone.yml for Drone 1.0 (pushing to Docker Hub):
 
 ```yaml

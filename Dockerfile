@@ -1,5 +1,10 @@
 FROM gcr.io/kaniko-project/executor:debug-v0.19.0
 
+LABEL maintainer="İbrahim Akyel <ibrahim@ibrahimakyel.com>" \
+	org.label-schema.name="Drone Kaniko" \
+	org.label-schema.vendor="İbrahim Akyel" \
+	org.label-schema.schema-version="1.0"
+
 ENV HOME /root
 ENV USER root
 ENV SSL_CERT_DIR=/kaniko/ssl/certs
