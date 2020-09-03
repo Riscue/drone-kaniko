@@ -6,10 +6,12 @@ export PATH=$PATH:/kaniko/
 
 REGISTRY=${PLUGIN_REGISTRY:-index.docker.io}
 
-if [ "${PLUGIN_USERNAME:-}" ] || [ "${PLUGIN_PASSWORD:-}" ]; then
+if [ "${PLUGIN_AUTHJSON_DOCKER:-}" ]; then
+    echo "${PLUGIN_AUTHJSON_DOCKER}" > /kaniko/.docker/config.json
+elif [ "${PLUGIN_USERNAME:-}" ] || [ "${PLUGIN_PASSWORD:-}" ]; then
     DOCKER_AUTH=`echo -n "${PLUGIN_USERNAME}:${PLUGIN_PASSWORD}" | base64 | tr -d "\n"`
 
-    cat > /kaniko/.docker/config.json <<DOCKERJSON
+    cat > /kaniko/docker.json <<DOCKERJSON
 {
     "auths": {
         "${REGISTRY}": {
@@ -20,9 +22,18 @@ if [ "${PLUGIN_USERNAME:-}" ] || [ "${PLUGIN_PASSWORD:-}" ]; then
 DOCKERJSON
 fi
 
-if [ "${PLUGIN_JSON_KEY:-}" ];then
+if [ "${PLUGIN_AUTHJSON_GCR:-}" ];then
+    echo "${PLUGIN_AUTHJSON_GCR}" > /kaniko/gcr.json
+    export GOOGLE_APPLICATION_CREDENTIALS=/kaniko/gcr.json
+elif [ "${PLUGIN_JSON_KEY:-}" ];then
+# deprecated
     echo "${PLUGIN_JSON_KEY}" > /kaniko/gcr.json
     export GOOGLE_APPLICATION_CREDENTIALS=/kaniko/gcr.json
+fi
+
+if [ "${PLUGIN_AUTHJSON_AWS:-}" ];then
+    mkdir -p ${HOME}/.aws
+    echo "${PLUGIN_AUTHJSON_AWS}" > ${HOME}/.aws/credentials
 fi
 
 DOCKERFILE=${PLUGIN_DOCKERFILE:-Dockerfile}
@@ -75,13 +86,13 @@ if [[ "${PLUGIN_AUTO_TAG:-}" == "true" ]]; then
         major=$(echo "${TAG}" |awk -F'.' '{print $1}')
         minor=$(echo "${TAG}" |awk -F'.' '{print $2}')
         release=$(echo "${TAG}" |awk -F'.' '{print $3}')
-    
+
         major=${major:-0}
         minor=${minor:-0}
         release=${release:-0}
-    
+
         echo "${major},${major}.${minor},${major}.${minor}.${release},latest" > .tags
-    fi  
+    fi
 fi
 
 if [ -n "${PLUGIN_TAGS:-}" ] && [ -n "${PLUGIN_REPO:-}" ]; then
