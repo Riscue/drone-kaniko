@@ -3,6 +3,11 @@ type: docker
 name: default
 
 steps:
+  - name: test
+    image: alpine:3.12
+    commands:
+      - ./test.sh
+
   - name: publish
     image: plugins/docker
     settings:
@@ -11,6 +16,9 @@ steps:
       username: riscue
       password:
         from_secret: DOCKER_PASSWORD
+    when:
+      event:
+        - tag
 
   - name: notify
     image: drillster/drone-email
@@ -30,7 +38,3 @@ steps:
       status:
         - changed
         - failure
-
-trigger:
-  event:
-    - tag

@@ -9,10 +9,6 @@ out-tsc/
 ng/
 node/
 
-#Generator
-*.sh
-files/
-
 # dependencies
 node_modules
 

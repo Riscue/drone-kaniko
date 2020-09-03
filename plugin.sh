@@ -1,4 +1,4 @@
-#!/busybox/sh
+#!/bin/sh
 
 set -euo pipefail
 
@@ -84,9 +84,9 @@ if [[ "${PLUGIN_AUTO_TAG:-}" == "true" ]]; then
     fi  
 fi
 
-if [ -n "${PLUGIN_TAGS:-}" ]; then
+if [ -n "${PLUGIN_TAGS:-}" ] && [ -n "${PLUGIN_REPO:-}" ]; then
     DESTINATIONS=$(echo "${PLUGIN_TAGS}" | tr ',' '\n' | while read tag; do echo "--destination=${REGISTRY}/${PLUGIN_REPO}:${tag} "; done)
-elif [ -f .tags ]; then
+elif [ -f .tags ] && [ -n "${PLUGIN_REPO:-}" ]; then
     DESTINATIONS=$(cat .tags| tr ',' '\n' | while read tag; do echo "--destination=${REGISTRY}/${PLUGIN_REPO}:${tag} "; done)
 elif [ -n "${PLUGIN_REPO:-}" ]; then
     DESTINATIONS="--destination=${REGISTRY}/${PLUGIN_REPO}:latest"
@@ -96,7 +96,7 @@ else
     CACHE=""
 fi
 
-/kaniko/executor -v ${LOG} \
+CMD="/kaniko/executor -v ${LOG} \
     --context=${CONTEXT} \
     --dockerfile=${DOCKERFILE} \
     ${EXTRA_OPTS} \
@@ -106,4 +106,10 @@ fi
     ${CACHE_REPO:-} \
     ${TARGET:-} \
     ${BUILD_ARGS:-} \
-    ${BUILD_ARGS_FROM_ENV:-}
+    ${BUILD_ARGS_FROM_ENV:-}"
+
+if [ "${UNIT_TEST:-false}" == "true" ]; then
+  echo $CMD
+else
+  exec $CMD
+fi
