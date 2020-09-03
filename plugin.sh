@@ -11,7 +11,7 @@ if [ "${PLUGIN_AUTHJSON_DOCKER:-}" ]; then
 elif [ "${PLUGIN_USERNAME:-}" ] || [ "${PLUGIN_PASSWORD:-}" ]; then
     DOCKER_AUTH=`echo -n "${PLUGIN_USERNAME}:${PLUGIN_PASSWORD}" | base64 | tr -d "\n"`
 
-    cat > /kaniko/docker.json <<DOCKERJSON
+    cat > /kaniko/.docker/config.json <<DOCKERJSON
 {
     "auths": {
         "${REGISTRY}": {
@@ -27,6 +27,7 @@ if [ "${PLUGIN_AUTHJSON_GCR:-}" ];then
     export GOOGLE_APPLICATION_CREDENTIALS=/kaniko/gcr.json
 elif [ "${PLUGIN_JSON_KEY:-}" ];then
 # deprecated
+    echo "PLUGIN_JSON_KEY is deprecated. Use PLUGIN_AUTHJSON_GCR instead"
     echo "${PLUGIN_JSON_KEY}" > /kaniko/gcr.json
     export GOOGLE_APPLICATION_CREDENTIALS=/kaniko/gcr.json
 fi
