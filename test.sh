@@ -48,7 +48,8 @@ echo "Success"
 
 # Test Case 2 (Deprecated Feature)
 env='PLUGIN_REPO=test_repo PLUGIN_JSON_KEY=test_json_key'
-output='/kaniko/executor -v info --context=/drone/src --dockerfile=Dockerfile --destination=index.docker.io/test_repo:latest'
+output='PLUGIN_JSON_KEY is deprecated. Use PLUGIN_AUTHJSON_GCR instead
+/kaniko/executor -v info --context=/drone/src --dockerfile=Dockerfile --destination=index.docker.io/test_repo:latest'
 __run "$env" "$output"
 __check_file "/kaniko/gcr.json" "test_json_key"
 echo "Success"
