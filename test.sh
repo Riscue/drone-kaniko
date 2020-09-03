@@ -4,14 +4,18 @@ mkdir /kaniko && mkdir /kaniko/.docker
 
 __run() {
   actual=$(env UNIT_TEST=true $1 ./plugin.sh)
-  echo -n $actual | grep "$2" &> /dev/null
+  echo $actual > .actual
+  echo $2 > .expected
+  cmp -s .actual .expected
 
   if [ $? != 0 ]; then
     echo "Failed:"
-    echo -e "\tActual:\t\t$actual"
-    echo -e "\tExpected:\t$2"
+    echo -e "\tActual:\t\t\"$actual\""
+    echo -e "\tExpected:\t\"$2\""
     exit 1
   fi
+
+  rm .actual .expected
 }
 
 __check_file() {
@@ -19,12 +23,12 @@ __check_file() {
     if [ -f "$1" ]; then
       echo $(cat $1) > .actual
       echo $2 > .expected
-      diff .actual .expected
+      cmp -s .actual .expected
 
       if [ $? != 0 ]; then
         echo "Failed:"
-        echo -e "\tActual:\t\t$actual"
-        echo -e "\tExpected:\t$2"
+        echo -e "\tActual:\t\t\"$actual\""
+        echo -e "\tExpected:\t\"$2\""
         exit 1
       fi
 
