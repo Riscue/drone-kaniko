@@ -92,7 +92,13 @@ if [[ "${PLUGIN_AUTO_TAG:-}" == "true" ]]; then
         minor=${minor:-0}
         release=${release:-0}
 
-        echo "${major},${major}.${minor},${major}.${minor}.${release},latest" > .tags
+        if [[ "${major}" != "0" ]]; then
+          echo "${major},${major}.${minor},${major}.${minor}.${release},latest" > .tags
+        elif [[ "${minor}" != "0" ]]; then
+          echo "${major}.${minor},${major}.${minor}.${release},latest" > .tags
+        elif [[ "${release}" != "0" ]]; then
+          echo "${major}.${minor}.${release},latest" > .tags
+        fi
     fi
 fi
 

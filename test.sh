@@ -69,26 +69,33 @@ __check_file "/kaniko/.docker/config.json" "{
 echo "Success"
 
 # Test Case 4
+env='PLUGIN_REPO=test_repo PLUGIN_AUTO_TAG=true DRONE_TAG=0.0.1'
+output='/kaniko/executor -v info --context=/drone/src --dockerfile=Dockerfile --destination=index.docker.io/test_repo:0.0.1 --destination=index.docker.io/test_repo:latest'
+__run "$env" "$output"
+__check_file ".tags" "0.0.1,latest"
+echo "Success"
+
+# Test Case 5
 env='PLUGIN_LOG=debug PLUGIN_REGISTRY=test_registry PLUGIN_REPO=test_repo PLUGIN_TAGS=test_tags PLUGIN_CACHE=true PLUGIN_CACHE_REPO=test_cache_repo PLUGIN_CACHE_TTL=test_cache_ttl PLUGIN_SKIP_TLS_VERIFY=true PLUGIN_BUILD_ARGS=test_build_args'
 output='/kaniko/executor -v debug --context=/drone/src --dockerfile=Dockerfile --skip-tls-verify=true --destination=test_registry/test_repo:test_tags --cache=true --cache-ttl=test_cache_ttl --cache-repo=test_registry/test_cache_repo --build-arg=test_build_args'
 __run "$env" "$output"
 echo "Success"
 
-# Test Case 5
+# Test Case 6
 env='PLUGIN_REPO=test_repo PLUGIN_AUTHJSON_DOCKER=test_json_key'
 output='/kaniko/executor -v info --context=/drone/src --dockerfile=Dockerfile --destination=index.docker.io/test_repo:latest'
 __run "$env" "$output"
 __check_file "/kaniko/.docker/config.json" "test_json_key"
 echo "Success"
 
-# Test Case 6
+# Test Case 7
 env='PLUGIN_REPO=test_repo PLUGIN_AUTHJSON_GCR=test_json_key'
 output='/kaniko/executor -v info --context=/drone/src --dockerfile=Dockerfile --destination=index.docker.io/test_repo:latest'
 __run "$env" "$output"
 __check_file "/kaniko/gcr.json" "test_json_key"
 echo "Success"
 
-# Test Case 7
+# Test Case 8
 env='PLUGIN_REPO=test_repo PLUGIN_AUTHJSON_AWS=test_json_key'
 output='/kaniko/executor -v info --context=/drone/src --dockerfile=Dockerfile --destination=index.docker.io/test_repo:latest'
 __run "$env" "$output"
